@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bức Thư Năm Mới</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -37,17 +37,23 @@
       background-position: center;
       background-repeat: no-repeat;
       z-index: 2;
-      transition: transform 1s;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
       transform: scale(0.9);
+    }
+
+    .container:hover .envelope {
+      transform: scale(1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
 
     .container.open .envelope {
       transform: translateY(-130%) scale(0.9);
+      box-shadow: none;
     }
 
     .letter {
       position: absolute;
-      top: 30%;
+      top: 30;
       left: 50%;
       width: 728px;
       height: 546px;
@@ -62,85 +68,292 @@
     }
 
     .container.open .letter {
-      top: 0%;
+      top: -5%;
       opacity: 1;
       transform: translateX(-50%) scale(0.8);
     }
 
     .content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; /* Điều chỉnh độ rộng của phần nội dung */
+  font-size: 20px; /* Giảm kích thước font chữ */
+  font-family: 'Pacifico', cursive;
+  color: #444;
+  text-align: center;
+  line-height: 1.5;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 1s 2s;
+  padding: 20px; /* Khoảng cách giữa văn bản và viền ảnh */
+}
+
+.container.open .content {
+  opacity: 1;
+}
+
+
+    .arrow-container {
       position: absolute;
-      top: 38%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      font-size: 28px;
-      font-family: 'Pacifico', cursive;
-      color: #444;
-      text-align: center;
-      line-height: 1.5;
+      top: 150px;
+      right: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       z-index: 3;
-      opacity: 0;
-      transition: opacity 1s 2s;
+      transition: opacity 0.5s ease-out;
     }
 
-    .container.open .content {
-      opacity: 1;
+    .arrow-container img {
+      width: 200px; /* Kích thước mũi tên */
+      transform: rotate(-90deg); /* Xoay mũi tên 90 độ sang trái */
+      margin-bottom: 10px; /* Khoảng cách giữa mũi tên và chữ */
     }
+
+    .arrow-text {
+      font-size: 20px; /* Tăng kích thước chữ */
+      font-weight: bold;
+      color: #d9534f;
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.5; /* Dòng chữ cách nhau thoải mái hơn */
+      text-align: center; /* Căn giữa văn bản */
+      max-width: 200px; /* Giới hạn chiều rộng dòng chữ */
+    }
+
+    .container.open + .arrow-container {
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* Container cho hình ảnh HPNY */
+.hpny-container {
+  position: absolute;
+  top: 0%; /* Vị trí bên trên màn hình */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4; /* Đảm bảo hình ảnh nằm trên mọi thành phần khác */
+}
+
+/* Hình ảnh HPNY */
+.hpny-image {
+  width: 430px; /* Kích thước hình ảnh */
+  height: auto; /* Tự động căn chỉnh chiều cao theo chiều rộng */
+}
+/* Container chứa hình ảnh góc trái */
+.top-left-container {
+  position: absolute;
+  top: -50px; /* Khoảng cách từ mép trên của trang */
+  left: -30px; /* Khoảng cách từ mép trái của trang */
+  z-index: 5; /* Đảm bảo hình ảnh hiển thị trên các phần tử khác */
+}
+
+/* Hình ảnh góc trái */
+.top-left-image {
+  width: 400px; /* Điều chỉnh kích thước hình ảnh (chiều rộng) */
+  height: auto; /* Đảm bảo hình ảnh không bị méo */
+}
+
+/* Container cho hình ảnh Góc Phải */
+.gocphai-container {
+  position: absolute;
+  top: 0; /* Căn trên cùng */
+  right: 0; /* Căn bên phải */
+  z-index: 5; /* Hiển thị trên các thành phần khác */
+}
+
+/* Hình ảnh Góc Phải */
+.gocphai-image {
+  width: 300px; /* Kích thước hình ảnh */
+  height: auto; /* Tự động căn chỉnh chiều cao */
+}
+/* Container cho hình ảnh anh1 */
+.anh1-container {
+  position: absolute;
+  top: 70px; /* Căn bên dưới goctrai.png (điều chỉnh giá trị này nếu cần) */
+  left: 210px; /* Căn sát lề trái */
+  z-index: 4; /* Hiển thị trên các phần tử khác nhưng dưới HPNY */
+}
+
+/* Hình ảnh anh1 */
+.anh1-image {
+  width: 380px; /* Kích thước hình ảnh */
+  height: auto; /* Tự động căn chỉnh chiều cao */
+}
+/* Ẩn ảnh ban đầu */
+.hidden-images {
+  position: fixed; /* Toàn màn hình */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  z-index: 6;
+  pointer-events: none; /* Tránh ảnh gây cản trở khi click */
+}
+
+/* Khi thư mở, ảnh hiện ra */
+.container.open + .hidden-images {
+  opacity: 1;
+}
+
+/* Tùy chỉnh vị trí từng ảnh (có thể điều chỉnh lại tuỳ ý) */
+.anh2 {
+  position: fixed;
+  top: 10%;
+  right: 25%;
+  width: 180px;
+}
+
+.anh3 {
+  position: fixed;
+  top: 30%;
+  left: 10%;
+  width: 200px;
+}
+
+.anh4 {
+  position: fixed;
+  top: 48%;
+  right: 7%;
+  width: 300px;
+}
+
+.anh6 {
+  position: fixed;
+  bottom: 13%;
+  left: 18%;
+  width: 300px;
+}
+
+.anh7 {
+  position: fixed;
+  top: 50%;
+  right: 23%;
+  width: 200px;
+}
+
+
+
+
+
   </style>
 </head>
 <body>
-  <div class="container" onclick="openEnvelope()">
-    <div class="envelope"></div>
-    <div class="letter"></div>
-    <div class="content" id="message"></div>
+  
+    <!-- Góc phải -->
+<div class="gocphai-container">
+  <img src="./gocphai.png" alt="Góc phải" class="gocphai-image">
+</div>
+
+      <!-- góc trái -->
+
+  <div class="top-left-container">
+    <img src="./goctrai.png" alt="Góc trái" class="top-left-image">
+  </div>  
+  <!-- Hình ảnh anh1 -->
+<div class="anh1-container">
+  <img src="./anh1.png" alt="Hình ảnh bên trái" class="anh1-image">
+</div>
+    <!-- Hình ảnh HPNY -->
+    <div class="hpny-container">
+      <img src="./hpny.png" alt="Happy New Year" class="hpny-image">
+    </div>
+  
+    <div class="container" onclick="openEnvelope()">
+      <div class="envelope"></div>
+      <div class="letter"></div>
+      <div class="content" id="message"></div>
+  </div>
+  
+  <!-- Ảnh xuất hiện sau khi mở thư (Bên ngoài .container để không bị giới hạn) -->
+  <div class="hidden-images">
+    <img src="./anh2.png" alt="Ảnh 2" class="anh2">
+    <img src="./anh3.png" alt="Ảnh 3" class="anh3">
+    <img src="./anh4.png" alt="Ảnh 4" class="anh4">
+    <img src="./anh6.png" alt="Ảnh 6" class="anh6">
+    <img src="./anh7.png" alt="Ảnh 7" class="anh7">
+  </div>
+  
+
+  <audio id="background-music" autoplay loop muted>
+    <source src="nhac.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ âm thanh.
+</audio>
+
+  <!-- Mũi tên và dòng chữ -->
+  <div class="arrow-container">
+    <img src="./muiten.png" alt="Arrow">
+    <div class="arrow-text">Bấm vào bức thư<br>để nhận lời chúc<br>^^</div>
   </div>
 
   <audio id="background-music" autoplay loop>
-    <source src="./background-music.mp3" type="audio/mpeg">
+    <source src="./nhac.mp3" type="audio/mpeg">
     Trình duyệt của bạn không hỗ trợ âm thanh.
   </audio>
 
   <script>
-    const message = "Chúc mừng năm mới! 🎉\nChúc bạn một năm tràn đầy niềm vui, hạnh phúc và thành công!";
+    const message = `Hélooooo khóc nhè
+Chắc là xưng tớ cậu cũng hơi ngượng nhưng mà xin phép post này sẽ xưng như thế =)))))
+Cũng không biết nói gì nhiều chúc 'pvh' cùng gia đình sẽ luôn hạnh phúc, 
+luôn yêu bản thân và gặp nhiều may mắn hehee. 
+Tớ cũng thấy vui vì được gặp khóc nhè trong năm vừa rồi, 
+nếu có cơ hội thì vẫn muốn được nói chuyện với cậu tiếp được gọi cậu dậy tiếpp =))).
+Chúc Hương sẽ không phải buồn hay áp lực vì những thứ không đáng có nữaa. Xinh gái thì không được buồnnn heheee`;
     const content = document.getElementById("message");
     let letterOpened = false;
 
     function openEnvelope() {
-      if (letterOpened) return;
-      
-      const container = document.querySelector(".container");
-      container.classList.add("open");
+    if (letterOpened) return;
 
-      let index = 0;
-      const interval = setInterval(() => {
+    const container = document.querySelector(".container");
+    const arrowContainer = document.querySelector(".arrow-container");
+    const hiddenImages = document.querySelector(".hidden-images");
+
+    container.classList.add("open");
+    hiddenImages.classList.add("open"); // Kích hoạt ảnh
+
+    // Ẩn mũi tên khi mở thư
+    arrowContainer.style.opacity = '0';
+    arrowContainer.style.pointerEvents = 'none';
+
+    let index = 0;
+    const interval = setInterval(() => {
         if (index < message.length) {
-          content.innerHTML = message.slice(0, index + 1).replace(/\n/g, "<br>");
-          index++;
+            content.innerHTML = message.slice(0, index + 1).replace(/\n/g, "<br>");
+            index++;
         } else {
-          clearInterval(interval);
+            clearInterval(interval);
         }
-      }, 100);
+    }, 100);
 
-      letterOpened = true;
-    }
+    letterOpened = true;
+}
 
-    window.addEventListener('load', () => {
-      const audio = document.getElementById('background-music');
-      const playPromise = audio.play();
 
-      if (playPromise !== undefined) {
+window.addEventListener('load', () => {
+    const audio = document.getElementById('background-music');
+    audio.muted = true; // Ban đầu tắt tiếng để trình duyệt tải nhạc
+
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
         playPromise
-          .then(() => {
-            console.log('Nhạc đã tự động phát!');
-          })
-          .catch(error => {
-            console.log('Trình duyệt chặn tự động phát nhạc:', error);
-            document.body.addEventListener('click', () => {
-              audio.play();
+            .then(() => {
+                console.log('Nhạc đã tự động phát!');
+                audio.muted = false; // Nếu phát thành công, bật tiếng
+            })
+            .catch(error => {
+                console.log('Trình duyệt chặn tự động phát nhạc:', error);
+                window.addEventListener('click', () => {
+                    audio.muted = false; // Khi click, bật tiếng
+                    audio.play();
+                }, { once: true }); // Chỉ chạy một lần
             });
-          });
-      }
-    });
+    }
+});
+
   </script>
 </body>
 </html>
