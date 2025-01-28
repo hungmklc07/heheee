@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bức Thư Năm Mới</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 100vh;
+      background-color: #f9f3e3;
+    }
+
+    .container {
+      position: relative;
+      width: 650px;
+      height: 500px;
+      cursor: pointer;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .envelope {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('./foryou.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 2;
+      transition: transform 1s;
+      transform: scale(0.9);
+    }
+
+    .container.open .envelope {
+      transform: translateY(-130%) scale(0.9);
+    }
+
+    .letter {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      width: 728px;
+      height: 546px;
+      background-image: url('./foryou2.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      transform: translateX(-50%) scale(0.7);
+      z-index: 1;
+      opacity: 0;
+      transition: top 1s 1s ease-out, opacity 0.8s 1s, transform 1s 1s ease-out;
+    }
+
+    .container.open .letter {
+      top: 0%;
+      opacity: 1;
+      transform: translateX(-50%) scale(0.8);
+    }
+
+    .content {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      font-size: 28px;
+      font-family: 'Pacifico', cursive;
+      color: #444;
+      text-align: center;
+      line-height: 1.5;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 1s 2s;
+    }
+
+    .container.open .content {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" onclick="openEnvelope()">
+    <div class="envelope"></div>
+    <div class="letter"></div>
+    <div class="content" id="message"></div>
+  </div>
+
+  <audio id="background-music" autoplay loop>
+    <source src="./background-music.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ âm thanh.
+  </audio>
+
+  <script>
+    const message = "Chúc mừng năm mới! 🎉\nChúc bạn một năm tràn đầy niềm vui, hạnh phúc và thành công!";
+    const content = document.getElementById("message");
+    let letterOpened = false;
+
+    function openEnvelope() {
+      if (letterOpened) return;
+      
+      const container = document.querySelector(".container");
+      container.classList.add("open");
+
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < message.length) {
+          content.innerHTML = message.slice(0, index + 1).replace(/\n/g, "<br>");
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 100);
+
+      letterOpened = true;
+    }
+
+    window.addEventListener('load', () => {
+      const audio = document.getElementById('background-music');
+      const playPromise = audio.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log('Nhạc đã tự động phát!');
+          })
+          .catch(error => {
+            console.log('Trình duyệt chặn tự động phát nhạc:', error);
+            document.body.addEventListener('click', () => {
+              audio.play();
+            });
+          });
+      }
+    });
+  </script>
+</body>
+</html>
