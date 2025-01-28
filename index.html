@@ -75,20 +75,24 @@
 
     .content {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px; /* Điều chỉnh độ rộng của phần nội dung */
-  font-size: 20px; /* Giảm kích thước font chữ */
+  top: 14.7%;  /* Điều chỉnh để chữ khớp với ảnh */
+  left: 22%;
+  width: 335px; /* Thu hẹp để vừa với giấy */
+  font-size: 16px; /* Giảm font chữ */
   font-family: 'Pacifico', cursive;
-  color: #444;
-  text-align: center;
-  line-height: 1.5;
+  color: #1c1919;
+  text-align: left; /* Căn lề trái */
   z-index: 3;
   opacity: 0;
+  white-space: pre-line; /* Giữ định dạng dòng */
   transition: opacity 1s 2s;
-  padding: 20px; /* Khoảng cách giữa văn bản và viền ảnh */
+  padding: 15px; /* Tạo khoảng cách với viền ảnh */
 }
+.content span {
+  display: inline-block; /* Để margin hoạt động với inline */
+  margin-bottom: 7px; /* Khoảng cách cố định giữa các dòng */
+}
+
 
 .container.open .content {
   opacity: 1;
@@ -224,7 +228,7 @@
   position: fixed;
   bottom: 13%;
   left: 18%;
-  width: 300px;
+  width: 350px;
 }
 
 .anh7 {
@@ -233,7 +237,15 @@
   right: 23%;
   width: 200px;
 }
-
+#fireworks {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Không ảnh hưởng đến sự tương tác */
+  z-index: 7; /* Đảm bảo nó ở trên mọi thứ */
+}
 
 
 
@@ -241,7 +253,7 @@
   </style>
 </head>
 <body>
-  
+  <canvas id="fireworks"></canvas>
     <!-- Góc phải -->
 <div class="gocphai-container">
   <img src="./gocphai.png" alt="Góc phải" class="gocphai-image">
@@ -294,42 +306,126 @@
   </audio>
 
   <script>
-    const message = `Hélooooo khóc nhè
-Chắc là xưng tớ cậu cũng hơi ngượng nhưng mà xin phép post này sẽ xưng như thế =)))))
-Cũng không biết nói gì nhiều chúc 'pvh' cùng gia đình sẽ luôn hạnh phúc, 
-luôn yêu bản thân và gặp nhiều may mắn hehee. 
-Tớ cũng thấy vui vì được gặp khóc nhè trong năm vừa rồi, 
-nếu có cơ hội thì vẫn muốn được nói chuyện với cậu tiếp được gọi cậu dậy tiếpp =))).
-Chúc Hương sẽ không phải buồn hay áp lực vì những thứ không đáng có nữaa. Xinh gái thì không được buồnnn heheee`;
+    function startFireworks() {
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+
+  function createParticle(x, y) {
+    const colors = ['#ff6b6b', '#fbc531', '#4cd137', '#487eb0', '#9c88ff'];
+    for (let i = 0; i < 60; i++) {
+      const angle = (Math.PI * 2 * i) / 60;
+      const speed = Math.random() * 3 + 2;
+      particles.push({
+        x,
+        y,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        dx: Math.cos(angle) * speed,
+        dy: Math.sin(angle) * speed,
+        life: Math.random() * 80 + 50,
+        opacity: 1,
+      });
+    }
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, index) => {
+      if (p.life > 0) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${hexToRgb(p.color)},${p.opacity})`;
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        p.opacity -= 0.01;
+        p.life -= 1;
+      } else {
+        particles.splice(index, 1);
+      }
+    });
+
+    requestAnimationFrame(drawParticles);
+  }
+
+  function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `${r},${g},${b}`;
+  }
+
+  setInterval(() => {
+    createParticle(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height * 0.5
+    );
+  }, 500);
+
+  drawParticles();
+}
+
+    const message = `Hélooooo khóc nhè.Chắc là xưng tớ cậu cũng hơi 
+ngượng nhưng mà xin phép hôm nay sẽ xưng như thế =))), Cũng không biết nói gì nhiều chúc 'pvh' cùng gia đình sẽ luôn hạnh phúc,luôn yêu bản thân và gặp nhiều may mắn hehee. Tớ cũng thấy vui vì được gặp Hương trong năm vừa rồi,nếu có cơ hội thì vẫnmuốn được nói chuyện với cậu tiếp được gọi cậu
+dậy tiếpp =))).Chúc Hương sẽ không phải buồn hay áp lực vì những thứ không đáng có nữaa.
+Xinh gái thì không được buồnnn heheee`;
     const content = document.getElementById("message");
     let letterOpened = false;
 
     function openEnvelope() {
-    if (letterOpened) return;
+  if (letterOpened) return;
 
-    const container = document.querySelector(".container");
-    const arrowContainer = document.querySelector(".arrow-container");
-    const hiddenImages = document.querySelector(".hidden-images");
+  const container = document.querySelector(".container");
+  const arrowContainer = document.querySelector(".arrow-container");
+  const hiddenImages = document.querySelector(".hidden-images");
 
-    container.classList.add("open");
-    hiddenImages.classList.add("open"); // Kích hoạt ảnh
+  container.classList.add("open");
+  hiddenImages.classList.add("open");
 
-    // Ẩn mũi tên khi mở thư
-    arrowContainer.style.opacity = '0';
-    arrowContainer.style.pointerEvents = 'none';
+  arrowContainer.style.opacity = '0';
+  arrowContainer.style.pointerEvents = 'none';
 
-    let index = 0;
-    const interval = setInterval(() => {
-        if (index < message.length) {
-            content.innerHTML = message.slice(0, index + 1).replace(/\n/g, "<br>");
-            index++;
+  const lines = message.split("\n"); // Tách nội dung thành từng dòng
+  content.innerHTML = ""; // Xóa nội dung trước khi hiển thị
+
+  let lineIndex = 0; // Chỉ số dòng hiện tại
+  let charIndex = 0; // Chỉ số ký tự trong dòng
+
+  function typeChar() {
+    if (lineIndex < lines.length) {
+      if (charIndex < lines[lineIndex].length) {
+        const char = lines[lineIndex][charIndex];
+        const span = document.createElement("span");
+
+        if (char === " ") {
+          span.innerHTML = "&nbsp;"; // Giữ khoảng trắng
         } else {
-            clearInterval(interval);
+          span.textContent = char;
         }
-    }, 100);
 
-    letterOpened = true;
+        content.appendChild(span);
+        charIndex++;
+        setTimeout(typeChar, 50); // Hiển thị từng chữ sau 50ms
+      } else {
+        const br = document.createElement("br");
+        content.appendChild(br);
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeChar, 50); // Chuyển sang dòng tiếp theo
+      }
+    }
+  }
+
+  typeChar(); // Bắt đầu hiển thị chữ
+  startFireworks(); // Hiệu ứng pháo hoa
+  letterOpened = true;
 }
+
 
 
 window.addEventListener('load', () => {
